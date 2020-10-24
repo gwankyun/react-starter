@@ -12345,6 +12345,7 @@ fsevents@^1.2.7:
     react: ^17.0.1
     react-dom: ^17.0.1
     react-scripts: 3.4.4
+    rxjs: ^6.6.3
     typescript: ~3.7.2
     use-immer: ^0.4.1
   languageName: unknown
@@ -12937,6 +12938,15 @@ resolve@1.15.0:
   dependencies:
     tslib: ^1.9.0
   checksum: 8e2b3c1c5ce1134212145f4ee3abd0ad1d3f84efeba1014490627e1176f15ceaeb8c79954d8473fbe01ee33443438a7a9588d442173145eddb294990d7e62102
+  languageName: node
+  linkType: hard
+
+"rxjs@npm:^6.6.3":
+  version: 6.6.3
+  resolution: "rxjs@npm:6.6.3"
+  dependencies:
+    tslib: ^1.9.0
+  checksum: 61a3da6db947f69b7d805df3a619d8f60678b7372c4d571dd63e45ef3532be984a88307ea0aa2cd8d2578b62c3c022186e8da9dca47c9c1b8c9ecba6f5581deb
   languageName: node
   linkType: hard
 

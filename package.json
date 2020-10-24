@@ -15,6 +15,7 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "3.4.4",
+    "rxjs": "^6.6.3",
     "typescript": "~3.7.2",
     "use-immer": "^0.4.1"
   },

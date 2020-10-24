@@ -4,7 +4,10 @@ import './App.css';
 import { Tabs, Input, Button } from 'antd';
 import { Game } from './Game';
 import { ToDo } from './ToDo';
-import { useImmer } from 'use-immer';
+// import { useImmer } from 'use-immer';
+import { range } from "rxjs";
+import { map, filter } from "rxjs/operators";
+import { Native } from './Native';
 
 const { TabPane } = Tabs;
 
@@ -29,36 +32,8 @@ const { TabPane } = Tabs;
 //   );
 // }
 
-interface ICheckBox {
-  checked: boolean;
-}
-
-interface CheckBox extends ICheckBox {
-  content: string;
-}
-
 const App: FC = () => {
-  const [text, setText] = useState<string>("");
   // const [checked, setChecked] = useState<boolean>(false);
-  const [checkedList, updateCheckedList] =
-    useImmer<CheckBox[]>([
-      { checked: false, content: "A" },
-      { checked: false, content: "B" }
-    ]);
-  const [color, setColor] = useState<string>("#ffffff");
-  const [date, setDate] = useState<string>("2020-02-20");
-  const [radio, setRadio] = useState<string>("A");
-  const [range, setRange] = useState<number>(50);
-
-  const onCheckBoxChange = useCallback((v: CheckBox): void => {
-    const index = checkedList.findIndex(i => i.content === v.content);
-    if (index !== -1) {
-      updateCheckedList(draft => {
-        const checked = draft[index].checked;
-        draft[index].checked = !checked;
-      });
-    }
-  }, [checkedList, updateCheckedList]);
 
   return (
     <Tabs defaultActiveKey="4">
@@ -73,70 +48,17 @@ const App: FC = () => {
         <Input />
       </TabPane>
       <TabPane tab="原生" key="4">
-        <button onClick={() => alert('click')}>button</button>
-        <hr />
-        <label>
-          單行文本框：
-            <input type="text"
-            value={text}
-            onChange={e => setText(e.target.value)} />
-        </label>
-        <hr />
-        <ul>
-          {[1, 2, 3, 4, 5].map((v, i) =>
-            <li key={i}>{v}</li>
-          )}
-        </ul>
-        <hr />
-        <label>
-          複選按鈕：
-          {checkedList.map((v) =>
-            <label>
-              <input type="checkbox"
-                checked={v.checked}
-                onChange={_ => onCheckBoxChange(v)} />
-              {v.content}
-            </label>)
-          }
-        </label>
-        <hr />
-        <label>
-          顏色：
-            <input type="color"
-            value={color}
-            onChange={e => setColor(e.target.value)} />
-        </label>
-        <hr />
-        <label>
-          日期：
-          <input type="date"
-            value={date}
-            onChange={e => setDate(e.target.value)} />
-        </label>
-        <hr />
-        <label>
-          單選按鈕：
-          {["A", "B", "C", "D"].map((v) =>
-            <div>
-              <label>
-                <input type="radio"
-                  value={v}
-                  checked={radio === v}
-                  onChange={e => setRadio(e.target.value)} />
-                {v}
-              </label>
-            </div>
-          )}
-        </label>
-        <hr />
-        <label>
-          範圍：{range}
-          <input type="range"
-            min={0}
-            max={100}
-            value={range}
-            onChange={e => setRange(parseInt(e.target.value))} />
-        </label>
+        <Native />
+      </TabPane>
+      <TabPane tab="RxJS" key="5">
+        <button onClick={_ => {
+          range(1, 200)
+            .pipe(
+              filter(x => x % 2 === 1),
+              map(x => x + x)
+            )
+            .subscribe(x => console.log(x));
+        }}>RxJS</button>
       </TabPane>
     </Tabs>
   );
