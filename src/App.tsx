@@ -8,6 +8,7 @@ import { ToDo } from './ToDo';
 import { range } from "rxjs";
 import { map, filter } from "rxjs/operators";
 import { Native } from './Native';
+import { RxJS } from './RxJS';
 
 const { TabPane } = Tabs;
 
@@ -51,14 +52,15 @@ const App: FC = () => {
         <Native />
       </TabPane>
       <TabPane tab="RxJS" key="5">
-        <button onClick={_ => {
+        <RxJS />
+        {/* <button onClick={_ => {
           range(1, 200)
             .pipe(
               filter(x => x % 2 === 1),
               map(x => x + x)
             )
             .subscribe(x => console.log(x));
-        }}>RxJS</button>
+        }}>RxJS</button> */}
       </TabPane>
     </Tabs>
   );
