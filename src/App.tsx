@@ -37,7 +37,7 @@ const App: FC = () => {
   // const [checked, setChecked] = useState<boolean>(false);
 
   return (
-    <Tabs defaultActiveKey="4">
+    <Tabs defaultActiveKey="5">
       <TabPane tab="游戲" key="1">
         <Game />
       </TabPane>
@@ -53,14 +53,6 @@ const App: FC = () => {
       </TabPane>
       <TabPane tab="RxJS" key="5">
         <RxJS />
-        {/* <button onClick={_ => {
-          range(1, 200)
-            .pipe(
-              filter(x => x % 2 === 1),
-              map(x => x + x)
-            )
-            .subscribe(x => console.log(x));
-        }}>RxJS</button> */}
       </TabPane>
     </Tabs>
   );
