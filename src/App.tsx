@@ -1,35 +1,12 @@
-import React, { FC, useState, useCallback } from 'react';
-// import logo from './logo.svg';
+import React, { useState, useCallback } from 'react';
 import './App.css';
 import { useImmer } from 'use-immer';
+import { produce } from 'immer';
 
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.tsx</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//       </header>
-//     </div>
-//   );
-// }
-
-class ToDo {
-  id: number = 0;
-  content: string = "";
-
-  constructor() {
-  }
+interface ToDo {
+  id: number;
+  content: string;
+  selected: boolean;
 }
 
 function useToDoService() {
@@ -40,19 +17,17 @@ function useToDoService() {
   const add = useCallback((value: string) => {
     if (value === "") {
       alert("不能為空。");
+      return;
     }
     updateList(draft => {
-      let toDo = new ToDo();
-      toDo.id = maxId;
-      toDo.content = value;
-      draft.push(toDo);
+      draft.push({ content: value, id: maxId, selected: false });
       setEdit("");
       setMaxId(maxId + 1);
     });
   }, [updateList, setEdit, maxId, setMaxId]);
 
-  const remove  = useCallback((id: number) => {
-    const idx = list.findIndex(v => v.id === id);
+  const remove  = useCallback((toDo: ToDo) => {
+    const idx = list.findIndex(v => v.id === toDo.id);
     if (idx !== -1) {
       updateList(draft => {
         draft.splice(idx, 1);
@@ -60,12 +35,39 @@ function useToDoService() {
     }
   }, [updateList, list]);
 
+  const mouseEnter = useCallback((toDo: ToDo) => {
+    console.log(`mouseMove toDo: ${toDo.content} ${toDo.selected}`);
+    const idx = list.findIndex(v => v.id === toDo.id);
+    if (idx !== -1) {
+      console.log(`yes`);
+      updateList(draft => {
+        draft[idx] = produce(toDo, draft => {
+          draft.selected = true;
+        });
+      });
+    }
+  }, [list, updateList]);
+
+  const mouseLeave = useCallback((toDo: ToDo) => {
+    console.log(`mouseLeave toDo: ${toDo.content} ${toDo.selected}`);
+    const idx = list.findIndex(v => v.id === toDo.id);
+    if (idx !== -1) {
+      updateList(draft => {
+        draft[idx] = produce(toDo, draft => {
+          draft.selected = false;
+        });
+      });
+    }
+  }, [list, updateList]);
+
   return {
     edit,
     setEdit,
     list,
     add,
-    remove
+    remove,
+    mouseEnter,
+    mouseLeave
   };
 }
 
@@ -81,9 +83,13 @@ function App() {
       <ul>
         {toDoService.list.map((v, i) => {
           return (
-            <li>
+            <li key={v.id}
+              onMouseEnter={e => toDoService.mouseEnter(v)}
+              onMouseLeave={e => toDoService.mouseLeave(v)}>
               {v.content}
-              <button onClick={e => toDoService.remove(v.id)}>-</button>
+              {v.selected &&
+                <button onClick={e => toDoService.remove(v)}>-</button>
+              }
             </li>
           );
         })}
