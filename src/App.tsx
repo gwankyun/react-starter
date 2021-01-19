@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { FC, useState, useCallback } from 'react';
 import './App.css';
 import { useImmer } from 'use-immer';
 import { produce } from 'immer';
@@ -9,7 +9,7 @@ interface ToDo {
   selected: boolean;
 }
 
-function useToDoService() {
+const useToDoService = () => {
   const [list, updateList] = useImmer<ToDo[]>([]);
   const [edit, setEdit] = useState<string>("");
   const [maxId, setMaxId] = useState<number>(0);
@@ -69,9 +69,21 @@ function useToDoService() {
     mouseEnter,
     mouseLeave
   };
+};
+
+type IIf = {
+  condiction: boolean;
 }
 
-function App() {
+const If: FC<IIf> = ({ condiction, children }) => {
+  return (
+    <React.Fragment>
+      { condiction && children}
+    </React.Fragment>
+  );
+};
+
+const App: FC = () => {
   const toDoService = useToDoService();
 
   return (
@@ -86,16 +98,18 @@ function App() {
             <li key={v.id}
               onMouseEnter={e => toDoService.mouseEnter(v)}
               onMouseLeave={e => toDoService.mouseLeave(v)}>
-              {v.content}
-              {v.selected &&
-                <button onClick={e => toDoService.remove(v)}>-</button>
-              }
+              <div>
+                {v.content}
+                <If condiction={v.selected}>
+                  <button onClick={e => toDoService.remove(v)}>-</button>
+                </If>
+              </div>
             </li>
           );
         })}
       </ul>
     </div>
   );
-}
+};
 
 export default App;
